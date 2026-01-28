@@ -35,10 +35,10 @@ app.get("/api/media", async (req, res) => {
         let tri = { "fields.titre_avec_lien_vers_le_catalogue": 1 };
         if (order === "za") {
             tri = { "fields.titre_avec_lien_vers_le_catalogue": -1 };
-        } else if (order === "rang") {
-            tri = { "fields.rang": 1 };
         } else if (order === "resa") {
             tri = { "fields.nombre_de_reservations": -1 };
+        } else if (order === "aser") {
+            tri = { "fields.nombre_de_reservations": 1 };
         }
 
         // Récupération depuis MongoDB
@@ -52,7 +52,7 @@ app.get("/api/media", async (req, res) => {
             ).sort(tri).skip(skip).limit(limit).toArray();
 
             res.json({ data });
-            
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
