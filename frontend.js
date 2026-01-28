@@ -1,10 +1,20 @@
 let currentPage = 1;
 const limit = 9;
 let paginationMax = 1;
+let texte = "";
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+        texte = e.target.value;
+        currentPage = 1;     // reset pagination
+        loadBooks(currentPage).then(r => {} );
+    });
+});
 
 async function loadBooks(page = 1) {
     try {
-        const res = await fetch(`/api/media?page=${page}&limit=${limit}`);
+        const res = await fetch(`/api/media?page=${page}&limit=${limit}&text=${texte}`);
         const data = await res.json();
 
         const container = document.getElementById("livres");

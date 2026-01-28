@@ -28,10 +28,18 @@ app.get("/api/media", async (req, res) => {
         // Récupère page et limit depuis l'URL, sinon valeurs par défaut
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 9;
+        const text = req.query.text || '';
         const skip = (page - 1) * limit;
 
         // Récupération depuis MongoDB
-        const data = await movies.find()
+        const data = await movies.find({
+                    "fields.titre_avec_lien_vers_le_catalogue": {
+                        $regex: `^${text}`,
+                        $options: "i"
+                    }
+                }
+            )
+            .sort({ "fields.titre_avec_lien_vers_le_catalogue": 1 })
             .skip(skip)
             .limit(limit)
             .toArray();
