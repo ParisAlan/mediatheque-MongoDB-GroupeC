@@ -1,11 +1,16 @@
-async function loadBooks() {
+let currentPage = 1;
+const limit = 9;
+let paginationMax = 1; // déclaration globale
+
+async function loadBooks(page = 1) {
     try {
-        const res = await fetch("/api/media");
+        const res = await fetch(`/api/media?page=${page}&limit=${limit}`);
         const data = await res.json();
 
         const container = document.getElementById("livres");
+        container.innerHTML = ""; // vide le conteneur des anciens résultats quand on change de page
 
-        data.forEach(book => {
+        data.data.forEach(book => {
             const div = document.createElement("div");
 
             div.innerHTML = `
@@ -17,22 +22,22 @@ async function loadBooks() {
                 <p><strong>ID:</strong> ${book._id}</p>
             `;
 
-            // Si FIELD9 est vide, on ajoute un bouton qui permet de emprunter
             if (!book.fields.FIELD9) {
                 const button = document.createElement("button");
                 button.textContent = "Emprunter";
                 button.onclick = () => {
                     alert(`Vous avez emprunté: ${book.fields.titre_avec_lien_vers_le_catalogue}`);
-                    // ici tu pourrais faire un fetch PUT/POST pour mettre à jour FIELD9 dans Mongo
+                    // fetch PUT/POST pour mettre à jour FIELD9
                 };
                 div.appendChild(button);
-            } else {
-                const button = document.createElement("button");
-                button.textContent = "Retourner";
             }
-
             container.appendChild(div);
         });
+
+        // Met à jour les infos de page
+        const pageInfo = document.getElementById('pageInfo');
+        pageInfo.textContent = `Page ${currentPage} / ${paginationMax}`;
+
     } catch (err) {
         console.error(err);
         const container = document.getElementById("livres");
@@ -40,4 +45,32 @@ async function loadBooks() {
     }
 }
 
-loadBooks().then(r => {} );
+async function afficherTotal() {
+    const res = await fetch("/api/count");
+    const data = await res.json();
+    document.getElementById("total").textContent = `Nombre total de médias : ${data.total}`;
+
+    paginationMax = Math.ceil(data.total / limit); // met à jour la variable globale
+}
+
+// ON RAJOUTE L'ÉCOUTE DES CLICS SUR LES BOUTONS
+function setupPagination() {
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (currentPage < paginationMax) {
+            currentPage++;
+            loadBooks(currentPage);
+        }
+    });
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            loadBooks(currentPage);
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await afficherTotal();  // récupère total et paginationMax
+    loadBooks(currentPage); // charge la première page
+    setupPagination();      // initialise boutons
+});

@@ -7,9 +7,25 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<p>TEST</p>
-<div id="livres"></div>
+<div class="test">
+    <header>
+        <h1>📚 Catalogue de Documents</h1>
+        <p class="subtitle">Connexion à MongoDB Atlas</p>
+        <p id="total"></p>
+    </header>
 
+    <nav class="navigation">
+        <a href="stats.html" class="nav-link">📊 Voir les statistiques</a>
+    </nav>
+
+    <div id="livres"></div>
+
+    <div id="pagination" class="pagination">
+        <button id="prevBtn">← Précédent</button>
+        <span id="pageInfo">Page 1</span>
+        <button id="nextBtn">Suivant →</button>
+    </div>
+</div>
 <script src="frontend.js"></script>
 
 </body>

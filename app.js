@@ -5,9 +5,7 @@ const path = require("path");
 
 const app = express();
 app.use(express.json());
-
-// Sert index.html, style.css, frontend JS
-app.use(express.static(path.join(__dirname))); // tous les fichiers statiques
+app.use(express.static('.')); // Sert les fichiers HTML/CSS/JS
 
 // Connexion à MongoDB
 const client = new MongoClient(process.env.MONGODB_URI);
@@ -23,16 +21,43 @@ async function connectDB() {
 }
 connectDB();
 
-// Endpoint pour récupérer tous les livres
+// Récupérer 9 livres suivant la page et la limit determiné
 app.get("/api/media", async (req, res) => {
     try {
         const movies = db.collection("exercice2");
-        const data = await movies.find().toArray();
-        res.json(data);
+
+        // Récupère page et limit depuis l'URL, sinon valeurs par défaut
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 9;
+        const skip = (page - 1) * limit;
+
+        // Récupération depuis MongoDB
+        const data = await movies.find()
+            .skip(skip)
+            .limit(limit)
+            .toArray();
+
+        // Nombre total de documents
+        const total = await movies.countDocuments();
+
+        res.json({ data });
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
+
+// Compter le nombre total de médias
+app.get("/api/count", async (req, res) => {
+    try {
+        const movies = db.collection("exercice2");
+        const total = await movies.countDocuments();
+        res.json({ total });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 
 
 module.exports = app;
