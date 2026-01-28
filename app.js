@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const { MongoClient } = require("mongodb");
-const path = require("path");
 
 const app = express();
 app.use(express.json());
@@ -14,7 +13,7 @@ async function connectDB() {
     try {
         await client.connect();
         db = client.db("semaine3");
-        console.log("MongoDB connecté");
+        console.log("MongoDB connecté !");
     } catch (err) {
         console.error("Erreur MongoDB:", err);
     }
@@ -37,9 +36,6 @@ app.get("/api/media", async (req, res) => {
             .limit(limit)
             .toArray();
 
-        // Nombre total de documents
-        const total = await movies.countDocuments();
-
         res.json({ data });
 
     } catch (err) {
@@ -57,6 +53,8 @@ app.get("/api/count", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+
 
 
 

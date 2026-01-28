@@ -1,6 +1,6 @@
 let currentPage = 1;
 const limit = 9;
-let paginationMax = 1; // déclaration globale
+let paginationMax = 1;
 
 async function loadBooks(page = 1) {
     try {
