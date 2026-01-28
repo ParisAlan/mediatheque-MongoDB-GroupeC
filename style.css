@@ -81,6 +81,31 @@ header h1 {
     box-shadow: var(--box-shadow);
 }
 
+/* Controls */
+
+.controls {
+    background-color: var(--card-bg);
+    padding: 10px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 10px;
+}
+
+.controls input {
+    flex: 1;
+    min-width: 250px;
+    border: 2px solid #ddd;
+}
+
+input[type="text"], select {
+    padding: 12px 20px;
+    border: 2px solid var(--secondary-color);
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+
 /* Grille des livres */
 #livres {
     display: grid;
@@ -117,6 +142,28 @@ header h1 {
 
 #livres p strong {
     color: var(--text-dark);
+}
+
+.dispo {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.85em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    background: #d4edda;
+    color: #155724;
+}
+
+.pas-dispo {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.85em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    background: #fff3cd;
+    color: #856404;
 }
 
 /* Boutons */

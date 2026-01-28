@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("searchInput").addEventListener("input", (e) => {
         texte = e.target.value;
-        currentPage = 1;     // reset pagination
+        currentPage = 1;
         loadBooks(currentPage).then(r => {} );
     });
 });
@@ -23,24 +23,27 @@ async function loadBooks(page = 1) {
         data.data.forEach(book => {
             const div = document.createElement("div");
 
+            let buttonHTML = "";
+            let infoHTML = "";
+            if (!book.fields.FIELD9) {
+                buttonHTML = `<button>Emprunter</button>`;
+                infoHTML = `<span class="dispo">✅ Disponible</span>`;
+            } else {
+                buttonHTML = `<button>Retourner</button>`;
+                infoHTML = `<span class="pas-dispo">📤 Emprunté</span>`;
+            }
+
             div.innerHTML = `
                 <h2>${book.fields.titre_avec_lien_vers_le_catalogue}</h2>
+                ${infoHTML}
                 <p><strong>Auteur:</strong> ${book.fields.auteur }</p>
                 <p><strong>Type:</strong> ${book.fields.type_de_document }</p>
                 <p><strong>Réservations:</strong> ${book.fields.nombre_de_reservations }</p>
                 <p><strong>Rang:</strong> ${book.fields.rang }</p>
                 <p><strong>ID:</strong> ${book._id}</p>
+                ${buttonHTML}
             `;
 
-            if (!book.fields.FIELD9) {
-                const button = document.createElement("button");
-                button.textContent = "Emprunter";
-                button.onclick = () => {
-                    alert(`Vous avez emprunté: ${book.fields.titre_avec_lien_vers_le_catalogue}`);
-                    // fetch PUT/POST pour mettre à jour FIELD9
-                };
-                div.appendChild(button);
-            }
             container.appendChild(div);
         });
 
