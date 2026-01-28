@@ -133,6 +133,11 @@ button {
     font-weight: 500;
 }
 
+#prevBtn,
+#nextBtn {
+    margin-top: 0;
+}
+
 button:hover {
     background-color: var(--primary-color);
     transform: scale(1.05);
