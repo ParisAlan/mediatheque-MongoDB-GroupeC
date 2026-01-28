@@ -1,9 +1,13 @@
+
+// VARIABLES & CONSTANTES
+
 let currentPage = 1;
 const limit = 9;
 let paginationMax = 1;
 let texte = "";
 let order = "";
 
+// SUITE AU CHARGEMENT DU DOM
 document.addEventListener("DOMContentLoaded", () => {
 
     // FILTRE 1 : RECHERCHE AVEC INPUT SPE
@@ -20,6 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
         loadBooks(currentPage).then(r => {} );
     });
 
+    afficherTotal();  // récupère total et paginationMax
+    loadBooks(currentPage); // charge la première page
+    setupPagination();      // initialise boutons
 });
 
 async function loadBooks(page = 1) {
@@ -92,8 +99,3 @@ function setupPagination() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-    await afficherTotal();  // récupère total et paginationMax
-    loadBooks(currentPage); // charge la première page
-    setupPagination();      // initialise boutons
-});
