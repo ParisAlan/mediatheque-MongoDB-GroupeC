@@ -29,23 +29,30 @@ app.get("/api/media", async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 9;
         const text = req.query.text || '';
+        const order = req.query.order || 1;
         const skip = (page - 1) * limit;
 
+        let tri = { "fields.titre_avec_lien_vers_le_catalogue": 1 };
+        if (order === "za") {
+            tri = { "fields.titre_avec_lien_vers_le_catalogue": -1 };
+        } else if (order === "rang") {
+            tri = { "fields.rang": 1 };
+        } else if (order === "resa") {
+            tri = { "fields.nombre_de_reservations": -1 };
+        }
+
         // Récupération depuis MongoDB
-        const data = await movies.find({
+
+            const data = await movies.find({
                     "fields.titre_avec_lien_vers_le_catalogue": {
                         $regex: `^${text}`,
                         $options: "i"
                     }
                 }
-            )
-            .sort({ "fields.titre_avec_lien_vers_le_catalogue": 1 })
-            .skip(skip)
-            .limit(limit)
-            .toArray();
+            ).sort(tri).skip(skip).limit(limit).toArray();
 
-        res.json({ data });
-
+            res.json({ data });
+            
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

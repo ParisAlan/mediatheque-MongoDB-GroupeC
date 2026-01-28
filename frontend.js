@@ -2,19 +2,29 @@ let currentPage = 1;
 const limit = 9;
 let paginationMax = 1;
 let texte = "";
+let order = "";
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    // FILTRE 1 : RECHERCHE AVEC INPUT SPE
     document.getElementById("searchInput").addEventListener("input", (e) => {
         texte = e.target.value;
         currentPage = 1;
         loadBooks(currentPage).then(r => {} );
     });
+
+    // FILTRE 2 : ALPHABETIQUE / REVERSE OU AUTRES ?
+    document.getElementById("sortSelect").addEventListener("change", (e) => {
+        order = e.target.value;
+        console.log(order)
+        loadBooks(currentPage).then(r => {} );
+    });
+
 });
 
 async function loadBooks(page = 1) {
     try {
-        const res = await fetch(`/api/media?page=${page}&limit=${limit}&text=${texte}`);
+        const res = await fetch(`/api/media?page=${page}&limit=${limit}&text=${texte}&order=${order}`);
         const data = await res.json();
 
         const container = document.getElementById("livres");
