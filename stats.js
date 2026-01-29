@@ -71,6 +71,32 @@ async function chargerDonnees() {
                     </div>
                 `;
             });
+        const divAuteurs = document.getElementById('liste-auteurs');
+        divAuteurs.innerHTML = ''; 
+        let maxAuteur = 0;
+        if (donnees.topAuteurs && donnees.topAuteurs.length > 0) {
+            maxAuteur = donnees.topAuteurs[0].nombre;
+        }
+
+        if (donnees.topAuteurs) {
+            donnees.topAuteurs.forEach((item, index) => {
+                const nom = item._id || "Non défini";
+                const nb = item.nombre;
+                const pourcent = (nb / maxAuteur) * 100;
+                const numCouleur = (index % 5) + 1;
+
+                divAuteurs.innerHTML += `
+                    <div class="ligne-type">
+                        <div class="titre-type">${nom}</div>
+                        <div class="fond-barre">
+                            <div class="barre couleur${numCouleur}" style="width: ${pourcent}%;">
+                                ${nb}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
         }
 
     } catch (err) {

@@ -55,7 +55,17 @@ app.get('/api/stats', async (req, res) => {
             },
             { $sort: { totalResas: -1 } }
         ]).toArray();
-
+        
+        const topAuteurs = await col.aggregate([
+            {
+                $group: {
+                    _id: "$fields.auteur",
+                    nombre: { $sum: 1 }
+                }
+            },
+            { $sort: { nombre: -1 } },
+            { $limit: 10 }
+        ]).toArray();
         const info = resultatsGlobal.length > 0 ? resultatsGlobal[0] : { total: 0, resas: 0 };
 
         res.json({
@@ -63,7 +73,8 @@ app.get('/api/stats', async (req, res) => {
             nbResa: info.resas,
             nbTypes: resultatsType.length,
             listeTypes: resultatsType,
-            classementResas: statsReservations
+            classementResas: statsReservations,
+            topAuteurs: topAuteurs
         });
 
     } catch (e) {
