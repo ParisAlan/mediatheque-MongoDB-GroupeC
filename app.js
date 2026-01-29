@@ -29,9 +29,18 @@ app.get("/api/media", async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 9;
         const text = req.query.text || '';
-        const order = req.query.order || 1;
         const skip = (page - 1) * limit;
+        const order = req.query.order || 1;
+        const dispo = req.query.dispo || '';
 
+        const query = {
+            "fields.titre_avec_lien_vers_le_catalogue": {
+                $regex: `^${text}`,
+                $options: "i"
+            }
+        };
+
+        // Suivant le filtre, on utilise une valeur différente :
         let tri = { "fields.titre_avec_lien_vers_le_catalogue": 1 };
         if (order === "za") {
             tri = { "fields.titre_avec_lien_vers_le_catalogue": -1 };
@@ -41,15 +50,17 @@ app.get("/api/media", async (req, res) => {
             tri = { "fields.nombre_de_reservations": 1 };
         }
 
+        // Suivant la recherche de disponibilités dans les filtres :
+
+        if (dispo === "disponible") {
+            query.FIELD9 = "";
+        } else if (dispo === "emprunte") {
+            query.FIELD9 = { $ne: "" };
+        }
+
         // Récupération depuis MongoDB
 
-            const data = await movies.find({
-                    "fields.titre_avec_lien_vers_le_catalogue": {
-                        $regex: `^${text}`,
-                        $options: "i"
-                    }
-                }
-            ).sort(tri).skip(skip).limit(limit).toArray();
+            const data = await movies.find(query).sort(tri).skip(skip).limit(limit).toArray();
 
             res.json({ data });
 

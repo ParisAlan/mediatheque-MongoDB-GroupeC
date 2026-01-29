@@ -6,6 +6,7 @@ const limit = 9;
 let paginationMax = 1;
 let texte = "";
 let order = "";
+let dispo = "";
 
 // SUITE AU CHARGEMENT DU DOM
 document.addEventListener("DOMContentLoaded", () => {
@@ -24,6 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
         loadBooks(currentPage).then(r => {} );
     });
 
+    // FILTRE 3 : DISPO OU PAS DISPO ?
+    document.getElementById("disponibiliteSelect").addEventListener("change", (e) => {
+        dispo = e.target.value;
+        console.log(dispo)
+        loadBooks(currentPage).then(r => {} );
+    })
+
     afficherTotal();  // récupère total et paginationMax
     loadBooks(currentPage); // charge la première page
     setupPagination();      // initialise boutons
@@ -31,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadBooks(page = 1) {
     try {
-        const res = await fetch(`/api/media?page=${page}&limit=${limit}&text=${texte}&order=${order}`);
+        const res = await fetch(`/api/media?page=${page}&limit=${limit}&text=${texte}&order=${order}&dispo=${dispo}`);
         const data = await res.json();
 
         const container = document.getElementById("livres");
@@ -43,10 +51,10 @@ async function loadBooks(page = 1) {
             let buttonHTML = "";
             let infoHTML = "";
             if (!book.fields.FIELD9) {
-                buttonHTML = `<button>Emprunter</button>`;
+                buttonHTML = `<button id="EmpruntBtn">Emprunter</button>`;
                 infoHTML = `<span class="dispo">✅ Disponible</span>`;
             } else {
-                buttonHTML = `<button>Retourner</button>`;
+                buttonHTML = `<button id="RetourBtn">Retourner</button>`;
                 infoHTML = `<span class="pas-dispo">📤 Emprunté</span>`;
             }
 
