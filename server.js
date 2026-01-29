@@ -45,13 +45,25 @@ app.get('/api/stats', async (req, res) => {
             { $sort: { nombre: -1 } }
         ]).toArray();
 
+        const statsReservations = await col.aggregate([
+            {
+                $group: {
+                    _id: "$fields.type_de_document",
+                    nbDocs: { $sum: 1 },
+                    totalResas: { $sum: "$fields.nombre_de_reservations" }
+                }
+            },
+            { $sort: { totalResas: -1 } }
+        ]).toArray();
+
         const info = resultatsGlobal.length > 0 ? resultatsGlobal[0] : { total: 0, resas: 0 };
 
         res.json({
             nbTotal: info.total,
             nbResa: info.resas,
             nbTypes: resultatsType.length,
-            listeTypes: resultatsType
+            listeTypes: resultatsType,
+            classementResas: statsReservations
         });
 
     } catch (e) {

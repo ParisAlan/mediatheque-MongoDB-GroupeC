@@ -44,6 +44,35 @@ async function chargerDonnees() {
             `;
         });
 
+        const divResa = document.getElementById('liste-reservations');
+        divResa.innerHTML = ''; 
+        let maxResa = 0;
+        if (donnees.classementResas) {
+            donnees.classementResas.forEach((item, index) => {
+                const nom = item._id || "Non défini";
+                const total = item.totalResas;
+                const nbDocs = item.nbDocs;
+                const moyenne = (nbDocs > 0) ? (total / nbDocs).toFixed(2) : 0;
+                const pourcent = (total / maxResa) * 100;
+                const numCouleur = (index % 5) + 1;
+                divResa.innerHTML += `
+                    <div class="ligne-type">
+                        <div class="titre-type">${nom}</div>
+                        
+                        <div class="fond-barre">
+                            <div class="barre couleur${numCouleur}" style="width: ${pourcent}%;">
+                                ${total}
+                            </div>
+                        </div>
+
+                        <div class="details-stat" style="font-size: 0.8em; color: #666; margin-top: 2px;">
+                            ${nbDocs} doc(s) • Moyenne: ${moyenne} / doc
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
     } catch (err) {
         console.log(err);
         document.getElementById('message-info').innerText = "Erreur de chargement";
