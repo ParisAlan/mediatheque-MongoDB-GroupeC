@@ -80,6 +80,42 @@ app.get("/api/count", async (req, res) => {
     }
 });
 
+// Emprunter un livre (remplit FIELD9 avec la date actuelle)
+
+const { ObjectId } = require('mongodb');
+
+app.post("/api/media/:id/emprunter", async (req, res) => {
+    try {
+        const movies = db.collection("exercice2");
+        const bookId = req.params.id;
+
+        const result = await movies.updateOne(
+            { _id: new ObjectId(bookId) },
+            { $set: { FIELD9: new Date() } }
+        );
+
+        res.json({ result });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.put("/api/media/:id/retourner", async (req, res) => {
+    try {
+        const movies = db.collection("exercice2");
+        const bookId = req.params.id;
+
+        const result = await movies.updateOne(
+            { _id: new ObjectId(bookId) },
+            { $set: { FIELD9: "" } }
+        );
+
+        res.json({ result });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 
 
 

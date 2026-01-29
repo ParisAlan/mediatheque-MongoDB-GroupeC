@@ -48,27 +48,36 @@ async function loadBooks(page = 1) {
         data.data.forEach(book => {
             const div = document.createElement("div");
 
-            let buttonHTML = "";
             let infoHTML = "";
-            if (!book.fields.FIELD9) {
-                buttonHTML = `<button id="EmpruntBtn">Emprunter</button>`;
-                infoHTML = `<span class="dispo">✅ Disponible</span>`;
-            } else {
-                buttonHTML = `<button id="RetourBtn">Retourner</button>`;
+            const button = document.createElement("button");
+
+            if (book.FIELD9 ) {
+                button.textContent = "Retourner";
+                button.className = "btn-retour";
+
                 infoHTML = `<span class="pas-dispo">📤 Emprunté</span>`;
+
+                button.addEventListener("click", () => retournerLivre(book._id));
+            } else {
+                button.textContent = "Emprunter";
+                button.className = "btn-emprunt";
+
+                infoHTML = `<span class="dispo">✅ Disponible</span>`;
+
+                button.addEventListener("click", () => emprunterLivre(book._id));
             }
 
             div.innerHTML = `
                 <h2>${book.fields.titre_avec_lien_vers_le_catalogue}</h2>
                 ${infoHTML}
-                <p><strong>Auteur:</strong> ${book.fields.auteur }</p>
-                <p><strong>Type:</strong> ${book.fields.type_de_document }</p>
-                <p><strong>Réservations:</strong> ${book.fields.nombre_de_reservations }</p>
-                <p><strong>Rang:</strong> ${book.fields.rang }</p>
+                <p><strong>Auteur:</strong> ${book.fields.auteur}</p>
+                <p><strong>Type:</strong> ${book.fields.type_de_document}</p>
+                <p><strong>Réservations:</strong> ${book.fields.nombre_de_reservations}</p>
+                <p><strong>Rang:</strong> ${book.fields.rang}</p>
                 <p><strong>ID:</strong> ${book._id}</p>
-                ${buttonHTML}
             `;
 
+            div.appendChild(button); // on ajoute le bouton réel
             container.appendChild(div);
         });
 
@@ -106,4 +115,23 @@ function setupPagination() {
         }
     });
 }
+
+async function emprunterLivre(bookId) {
+    try {
+        await fetch(`/api/media/${bookId}/emprunter`, { method: "POST" });
+        loadBooks(currentPage); // refresh après emprunt
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function retournerLivre(bookId) {
+    try {
+        await fetch(`/api/media/${bookId}/retourner`, { method: "PUT" });
+        loadBooks(currentPage); // refresh après retour
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 
