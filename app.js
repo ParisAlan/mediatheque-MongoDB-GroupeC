@@ -84,13 +84,13 @@ app.get("/api/count", async (req, res) => {
 
 const { ObjectId } = require('mongodb');
 
-app.post("/api/media/:id/emprunter", async (req, res) => {
+app.post("/api/media/:rang/emprunter", async (req, res) => {
     try {
         const movies = db.collection("exercice2");
-        const bookId = req.params.id;
+        const rang = parseInt(req.params.rang);
 
         const result = await movies.updateOne(
-            { _id: new ObjectId(bookId) },
+            { "fields.rang": rang },   // Permet de trouver avec un rang spécifique
             { $set: { FIELD9: new Date() } }
         );
 
@@ -100,13 +100,13 @@ app.post("/api/media/:id/emprunter", async (req, res) => {
     }
 });
 
-app.put("/api/media/:id/retourner", async (req, res) => {
+app.put("/api/media/:rang/retourner", async (req, res) => {
     try {
         const movies = db.collection("exercice2");
-        const bookId = req.params.id;
+        const rang = parseInt(req.params.rang);
 
         const result = await movies.updateOne(
-            { _id: new ObjectId(bookId) },
+            { "fields.rang": rang },   // Permet de trouver avec un rang spécifique
             { $set: { FIELD9: "" } }
         );
 

@@ -57,14 +57,14 @@ async function loadBooks(page = 1) {
 
                 infoHTML = `<span class="pas-dispo">📤 Emprunté</span>`;
 
-                button.addEventListener("click", () => retournerLivre(book._id));
+                button.addEventListener("click", () => retournerLivre(book.fields.rang));
             } else {
                 button.textContent = "Emprunter";
                 button.className = "btn-emprunt";
 
                 infoHTML = `<span class="dispo">✅ Disponible</span>`;
 
-                button.addEventListener("click", () => emprunterLivre(book._id));
+                button.addEventListener("click", () => emprunterLivre(book.fields.rang));
             }
 
             div.innerHTML = `
@@ -116,18 +116,18 @@ function setupPagination() {
     });
 }
 
-async function emprunterLivre(bookId) {
+async function emprunterLivre(bookRang) {
     try {
-        await fetch(`/api/media/${bookId}/emprunter`, { method: "POST" });
+        await fetch(`/api/media/${bookRang}/emprunter`, { method: "POST" });
         loadBooks(currentPage); // refresh après emprunt
     } catch (err) {
         console.error(err);
     }
 }
 
-async function retournerLivre(bookId) {
+async function retournerLivre(bookRang) {
     try {
-        await fetch(`/api/media/${bookId}/retourner`, { method: "PUT" });
+        await fetch(`/api/media/${bookRang}/retourner`, { method: "PUT" });
         loadBooks(currentPage); // refresh après retour
     } catch (err) {
         console.error(err);
