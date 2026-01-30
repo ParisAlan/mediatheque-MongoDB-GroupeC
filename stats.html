@@ -2,11 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Statistiques du Catalogue</title>
 </head>
 <body>
+    <h1>📊 Statistiques du Catalogue</h1>
+    <a>Comparaison des types de documents</a>
+    <div class="conteneur">
+        
+        <div class="zone-boutons">
+            <button><a href="/" class="btn">📚 Retour au catalogue</a></button>
+            <button id="btn-maj" class="btn">🔄 Actualiser</button>
+        </div>
 
+        <p id="message-info">⏳ Chargement des statistiques...</p>
+
+        <div class="zone-haut">
+            <h2>📈 Vue d'ensemble</h2>
+            <div class="boite">
+                <span id="txt-total" class="gros-chiffre">-</span>
+                <span>Documents au total</span>
+            </div>
+            <div class="boite">
+                <span id="txt-types" class="gros-chiffre">-</span>
+                <span>Types différents</span>
+            </div>
+            <div class="boite">
+                <span id="txt-resa" class="gros-chiffre">-</span>
+                <span>Réservations totales</span>
+            </div>
+        </div>
+
+        <div class="zone-bas">
+            <h2>📚 Nombre de documents par type</h2>
+            <div id="liste-stats">
+                </div>
+        </div>
+
+        <div class="zone-bas">
+            <h2>⭐ Réservations par type de document</h2>
+            <div id="liste-reservations"></div>
+        </div>
+
+        <div class="zone-bas">
+            <h2>👤 Top 10 des auteurs</h2>
+            <div id="liste-auteurs"></div>
+        </div>
+    </div>
+    <script src="stats.js"></script>
 </body>
-
-<script src="stats.js"></script>
 </html>
