@@ -82,8 +82,6 @@ app.get("/api/count", async (req, res) => {
 
 // Emprunter un livre (remplit FIELD9 avec la date actuelle)
 
-const { ObjectId } = require('mongodb');
-
 app.post("/api/media/:rang/emprunter", async (req, res) => {
     try {
         const movies = db.collection("exercice2");
@@ -116,7 +114,75 @@ app.put("/api/media/:rang/retourner", async (req, res) => {
     }
 });
 
+const path = require('path');
 
+app.get('/stats', (req, res) => {
+    res.sendFile(path.join(__dirname, 'stats.html'));
+});
+
+app.get('/api/stats', async (req, res) => {
+    try {
+
+        const col = db.collection("exercice2");
+
+        const resultatsGlobal = await col.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: 1 },
+                    resas: { $sum: "$fields.nombre_de_reservations" }
+                }
+            }
+        ]).toArray();
+
+        const resultatsType = await col.aggregate([
+            {
+                $group: {
+                    _id: "$fields.type_de_document",
+                    nombre: { $sum: 1 }
+                }
+            },
+            { $sort: { nombre: -1 } }
+        ]).toArray();
+
+        const statsReservations = await col.aggregate([
+            {
+                $group: {
+                    _id: "$fields.type_de_document",
+                    nbDocs: { $sum: 1 },
+                    totalResas: { $sum: "$fields.nombre_de_reservations" }
+                }
+            },
+            { $sort: { totalResas: -1 } }
+        ]).toArray();
+
+        const topAuteurs = await col.aggregate([
+            {
+                $group: {
+                    _id: "$fields.auteur",
+                    nombre: { $sum: 1 }
+                }
+            },
+            { $sort: { nombre: -1 } },
+            { $limit: 10 }
+        ]).toArray();
+
+        const info = resultatsGlobal.length > 0 ? resultatsGlobal[0] : { total: 0, resas: 0 };
+
+        res.json({
+            nbTotal: info.total,
+            nbResa: info.resas,
+            nbTypes: resultatsType.length,
+            listeTypes: resultatsType,
+            classementResas: statsReservations,
+            topAuteurs: topAuteurs
+        });
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({ error: "Erreur de chargement" });
+    }
+});
 
 
 
