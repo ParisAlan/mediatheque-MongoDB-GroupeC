@@ -1,32 +1,63 @@
+// Gestion de l'affichage du formulaire
+document.getElementById('btnShowForm').addEventListener('click', () => {
+    document.getElementById('formSection').style.display = 'block';
+    document.getElementById('btnShowForm').style.display = 'none';
+});
+
+document.getElementById('btnCancel').addEventListener('click', () => {
+    document.getElementById('formSection').style.display = 'none';
+    document.getElementById('btnShowForm').style.display = 'block';
+    document.getElementById('userForm').reset();
+});
+
+// Charger les utilisateurs
 async function loadUsers() {
     const res = await fetch("/api/users");
     const users = await res.json();
 
-    const list = document.getElementById("usersList");
-    list.innerHTML = "";
+    const tbody = document.getElementById("usersList");
+    tbody.innerHTML = "";
+
+    if (users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-message">Aucun utilisateur pour le moment</td></tr>';
+        return;
+    }
 
     users.forEach(user => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-    <span id="user-${user._id}">
-        ${user.email} (${user.password})
-    </span>
-    <button onclick="editUser('${user._id}', '${user.email}', '${user.password}')">
-        Modifier
-    </button>
-    <button onclick="deleteUser('${user._id}')">
-        Supprimer
-    </button>
-`;
-        list.appendChild(li);
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${user.email}</td>
+            <td>${user.password}</td>
+            <td>
+                <button class="btn-icon btn-edit" onclick="editUser('${user._id}', '${user.email}', '${user.password}')">
+                    ✏️
+                </button>
+            </td>
+            <td>
+                <button class="btn-icon btn-delete" onclick="deleteUser('${user._id}')">
+                    🗑️
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
     });
 }
 
+// Supprimer un utilisateur
 async function deleteUser(id) {
-    await fetch(`/api/users/${id}`, { method: "DELETE" });
-    await loadUsers();
+    if (!confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
+        return;
+    }
+    
+    try {
+        await fetch(`/api/users/${id}`, { method: "DELETE" });
+        await loadUsers();
+    } catch (error) {
+        alert("Erreur lors de la suppression");
+    }
 }
 
+// Ajouter un utilisateur
 document.getElementById("userForm").addEventListener("submit", async e => {
     e.preventDefault();
 
@@ -35,32 +66,45 @@ document.getElementById("userForm").addEventListener("submit", async e => {
         password: document.getElementById("password").value
     };
 
-    await fetch("/api/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user)
-    });
+    try {
+        await fetch("/api/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(user)
+        });
 
-    e.target.reset();
-    await loadUsers();
+        e.target.reset();
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('btnShowForm').style.display = 'block';
+        await loadUsers();
+    } catch (error) {
+        alert("Erreur lors de l'ajout");
+    }
 });
 
-loadUsers();
-
+// Modifier un utilisateur
 async function editUser(id, email, password) {
     const newEmail = prompt("Nouveau email :", email);
+    if (!newEmail) return;
+    
     const newPassword = prompt("Nouveau mot de passe :", password);
+    if (!newPassword) return;
 
-    if (!newEmail || !newPassword) return;
+    try {
+        await fetch(`/api/users/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: newEmail,
+                password: newPassword
+            })
+        });
 
-    await fetch(`/api/users/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            email: newEmail,
-            password: newPassword
-        })
-    });
-
-    loadUsers();
+        loadUsers();
+    } catch (error) {
+        alert("Erreur lors de la modification");
+    }
 }
+
+
+loadUsers();

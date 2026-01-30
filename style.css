@@ -472,3 +472,271 @@ body > a {
 
 
 
+
+
+
+
+
+
+
+
+
+/* ========================================
+   STYLES POUR ADMIN-USERS.HTML
+   ======================================== */
+
+/* Background pour la page CRUD */
+body:has(.crud-container) {
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Conteneur principal CRUD */
+.crud-container {
+    width: 100%;
+    max-width: 900px;
+}
+
+/* Carte CRUD */
+.crud-card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+}
+
+/* Header CRUD */
+.crud-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.crud-header h1 {
+    color: #52c9a8;
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.crud-header p {
+    color: #333;
+    font-size: 1em;
+    font-weight: 500;
+}
+
+/* Bouton Ajouter principal */
+.btn-ajouter {
+    background-color: #52c9a8;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(82, 201, 168, 0.3);
+}
+
+.btn-ajouter:hover {
+    background-color: #3fb396;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(82, 201, 168, 0.4);
+}
+
+/* Section formulaire */
+.form-section {
+    background-color: #f9f9f9;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    border: 2px solid #e0e0e0;
+}
+
+.user-form {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.user-form input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.user-form input:focus {
+    outline: none;
+    border-color: #52c9a8;
+    box-shadow: 0 0 0 3px rgba(82, 201, 168, 0.1);
+}
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.btn-submit,
+.btn-cancel {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit {
+    background-color: #52c9a8;
+    color: white;
+}
+
+.btn-submit:hover {
+    background-color: #3fb396;
+}
+
+.btn-cancel {
+    background-color: #e0e0e0;
+    color: #666;
+}
+
+.btn-cancel:hover {
+    background-color: #d0d0d0;
+}
+
+/* Tableau CRUD */
+.crud-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.crud-table thead {
+    background-color: #f5f5f5;
+}
+
+.crud-table th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 3px solid #52c9a8;
+}
+
+.crud-table th:nth-child(3),
+.crud-table th:nth-child(4) {
+    text-align: center;
+}
+
+.crud-table tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.crud-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.crud-table td {
+    padding: 18px 15px;
+    color: #555;
+    font-size: 0.95em;
+}
+
+.crud-table td:nth-child(3),
+.crud-table td:nth-child(4) {
+    text-align: center;
+}
+
+/* Boutons icônes dans le tableau */
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.btn-edit {
+    color: #6c63ff;
+}
+
+.btn-edit:hover {
+    background-color: #ede9ff;
+    transform: scale(1.1);
+}
+
+.btn-delete {
+    color: #ff6b6b;
+}
+
+.btn-delete:hover {
+    background-color: #ffe5e5;
+    transform: scale(1.1);
+}
+
+/* Message vide */
+.empty-message {
+    text-align: center !important;
+    padding: 40px !important;
+    color: #999;
+    font-style: italic;
+}
+
+/* Responsive CRUD */
+@media (max-width: 768px) {
+    .crud-card {
+        padding: 25px;
+    }
+    
+    .crud-header h1 {
+        font-size: 2em;
+    }
+    
+    .user-form {
+        flex-direction: column;
+    }
+    
+    .user-form input {
+        width: 100%;
+        min-width: 100%;
+    }
+    
+    .crud-table {
+        font-size: 0.85em;
+    }
+    
+    .crud-table th,
+    .crud-table td {
+        padding: 10px 8px;
+    }
+    
+    .btn-icon {
+        font-size: 1.3em;
+        padding: 6px 10px;
+    }
+}
+
+
+
+
+
+

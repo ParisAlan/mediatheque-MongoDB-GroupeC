@@ -2,6 +2,51 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin utilisateurs</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="crud-container">
+    <div class="crud-card">
+        <div class="crud-header">
+            <h1>CRUD Utilisateurs</h1>
+            <p>Ajouter, Lire, Modifier et Supprimer</p>
+        </div>
+
+        <button class="btn-ajouter" id="btnShowForm">
+            ➕ Ajouter
+        </button>
+
+        <!-- Formulaire d'ajout -->
+        <div id="formSection" class="form-section" style="display: none;">
+            <form id="userForm" class="user-form">
+                <input type="email" id="email" name="email" placeholder="Email..." required>
+                <input type="password" id="password" name="password" placeholder="Mot de passe..." required>
+                <div class="form-buttons">
+                    <button type="submit" class="btn-submit">Enregistrer</button>
+                    <button type="button" class="btn-cancel" id="btnCancel">Annuler</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tableau des utilisateurs -->
+        <table class="crud-table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Mot de passe</th>
+                    <th>Modifier</th>
+                    <th>Supprimer</th>
+                </tr>
+            </thead>
+            <tbody id="usersList">
+            </tbody>
+        </table>
+    </div>
+</div>
+=======
     <title>Admin utilisateurs</title>
 </head>
 <body>
@@ -15,6 +60,7 @@
 </form>
 
 <ul id="usersList"></ul>
+
 
 <script src="admin-users.js"></script>
 </body>
