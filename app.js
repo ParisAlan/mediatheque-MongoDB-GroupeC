@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId} = require("mongodb");
 
 const app = express();
 app.use(express.json());
@@ -214,7 +214,7 @@ app.post("/api/users", async (req, res) => {
 // Supprimer utilisateur
 app.delete("/api/users/:id", async (req, res) => {
     try {
-        const { id } = req.params;
+        const  id  = req.params;
         await usersCollection().deleteOne({ _id: new ObjectId(id) });
         res.json({ message: "Utilisateur supprimé" });
     } catch (err) {
@@ -238,8 +238,6 @@ app.put("/api/users/:id", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-
-
 
 
 module.exports = app;
