@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId} = require("mongodb");
 
 const app = express();
 app.use(express.json());
@@ -19,6 +19,11 @@ async function connectDB() {
     }
 }
 connectDB();
+
+
+//salma
+const usersCollection = () => db.collection("users");
+
 
 // Récupérer 9 livres suivant la page et la limit determiné
 app.get("/api/media", async (req, res) => {
@@ -184,6 +189,55 @@ app.get('/api/stats', async (req, res) => {
     }
 });
 
+//salma
+// recuperer les utilisateur
+app.get("/api/users", async (req, res) => {
+    try {
+        const users = await usersCollection().find().toArray();
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ajouter utilisateur
+app.post("/api/users", async (req, res) => {
+    try {
+        const user = req.body;
+        await usersCollection().insertOne(user);
+        res.json({ message: "Utilisateur ajouté" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Supprimer utilisateur
+app.delete("/api/users/:id", async (req, res) => {
+    try {
+        const  id  = req.params;
+        await usersCollection().deleteOne({ _id: new ObjectId(id) });
+        res.json({ message: "Utilisateur supprimé" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// modifier utilisateur
+app.put("/api/users/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedUser = req.body;
+
+        await usersCollection().updateOne(
+            { _id: new ObjectId(id) },
+            { $set: updatedUser }
+        );
+
+        res.json({ message: "Utilisateur modifié" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 
 module.exports = app;

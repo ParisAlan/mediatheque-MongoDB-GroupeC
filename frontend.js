@@ -42,6 +42,8 @@ async function loadBooks(page = 1) {
         const res = await fetch(`/api/media?page=${page}&limit=${limit}&text=${texte}&order=${order}&dispo=${dispo}`);
         const data = await res.json();
 
+        document.getElementById('message-info').innerText = "✅ Documents chargées avec succès";
+
         const container = document.getElementById("livres");
         container.innerHTML = ""; // vide le conteneur des anciens résultats quand on change de page
 
