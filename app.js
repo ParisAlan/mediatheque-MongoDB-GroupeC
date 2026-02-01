@@ -239,5 +239,20 @@ app.put("/api/users/:id", async (req, res) => {
     }
 });
 
+// HALISON : Route pour récupérer le Top 5 des documents les plus réservés
+app.get("/api/top5-reservations", async (req, res) => {
+    try {
+        const col = db.collection("exercice2");
+        // On trie par nombre_de_reservations (décroissant : -1) et on limite à 5
+        const top5 = await col.find()
+            .sort({ "fields.nombre_de_reservations": -1 })
+            .limit(5)
+            .toArray();
+        
+        res.json(top5);
+    } catch (err) {
+        res.status(500).json({ error: "Erreur Top 5: " + err.message });
+    }
+});
 
 module.exports = app;

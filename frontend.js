@@ -136,4 +136,16 @@ async function retournerLivre(bookRang) {
     }
 }
 
+// HALISON : Fonction pour afficher le Top 5 dans une alerte ou console pour tester vite
+document.getElementById("btnTop5")?.addEventListener("click", async () => {
+    const res = await fetch("/api/top5-reservations");
+    const top5 = await res.json();
+    
+    let message = "🏆 TOP 5 DES RÉSERVATIONS :\n\n";
+    top5.forEach((book, index) => {
+        message += `${index + 1}. ${book.fields.titre_avec_lien_vers_le_catalogue} (${book.fields.nombre_de_reservations} résas)\n`;
+    });
+    alert(message);
+});
+
 
